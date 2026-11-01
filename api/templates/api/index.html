@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VeriFace-X · Backend</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+    :root {
+      --bg: #f6f8fc;
+      --surface: #ffffff;
+      --surface-2: #f1f5fb;
+      --ink: #0f172a;
+      --ink-2: #334155;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --brand: #4f46e5;
+      --brand-2: #0ea5e9;
+      --brand-3: #14b8a6;
+      --brand-soft: #eef2ff;
+      --low: #059669;
+      --low-soft: #ecfdf5;
+      --medium: #d97706;
+      --medium-soft: #fffbeb;
+      --high: #dc2626;
+      --high-soft: #fef2f2;
+      --gradient: linear-gradient(120deg, #4f46e5 0%, #0ea5e9 55%, #14b8a6 100%);
+      --shadow: 0 10px 30px -14px rgba(15, 23, 42, 0.18);
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(900px 420px at 90% -10%, rgba(14, 165, 233, 0.13), transparent 60%),
+        radial-gradient(900px 420px at -10% 0%, rgba(79, 70, 229, 0.13), transparent 60%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---------- Header ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      animation: drop 0.6s var(--ease) both;
+    }
+    .nav {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 12px;
+      background: var(--gradient); color: #fff;
+      display: grid; place-items: center; font-weight: 800;
+      box-shadow: 0 10px 20px -10px rgba(79, 70, 229, 0.7);
+      transition: transform 0.5s var(--ease);
+    }
+    .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+    .brand span { color: var(--brand); }
+    .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px; border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+      text-decoration: none; border: 1px solid var(--line-strong, #cbd5e1);
+      color: var(--ink-2); background: var(--surface);
+      transition: transform 0.25s var(--ease), border-color 0.25s, color 0.25s, box-shadow 0.25s;
+    }
+    .btn:hover { transform: translateY(-2px); border-color: var(--brand); color: var(--brand); box-shadow: var(--shadow); }
+    .btn-primary { background: var(--gradient); color: #fff; border-color: transparent; box-shadow: 0 10px 22px -12px rgba(79, 70, 229, 0.7); }
+    .btn-primary:hover { color: #fff; border-color: transparent; }
+
+    /* ---------- Hero ---------- */
+    .hero { padding: 64px 0 40px; }
+    .status {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 14px; border-radius: 999px;
+      background: var(--surface); border: 1px solid var(--line);
+      font-size: 0.86rem; font-weight: 600; color: var(--ink-2);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+      animation: rise 0.7s var(--ease) 0.1s both;
+    }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--low);
+      box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.6);
+      animation: pulse 1.8s infinite;
+    }
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
+      margin: 20px 0 14px;
+      animation: rise 0.7s var(--ease) 0.2s both;
+    }
+    .gradient-text { background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lead { color: var(--ink-2); font-size: 1.08rem; max-width: 640px; animation: rise 0.7s var(--ease) 0.3s both; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; animation: rise 0.7s var(--ease) 0.4s both; }
+
+    /* ---------- Cards ---------- */
+    .grid { display: grid; gap: 18px; }
+    .stats { grid-template-columns: repeat(4, 1fr); margin-top: 36px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+      padding: 22px;
+      transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s;
+      animation: rise 0.7s var(--ease) both;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: #cbd5e1; }
+    .stats .card:nth-child(1) { animation-delay: 0.45s; }
+    .stats .card:nth-child(2) { animation-delay: 0.52s; }
+    .stats .card:nth-child(3) { animation-delay: 0.59s; }
+    .stats .card:nth-child(4) { animation-delay: 0.66s; }
+    .stat-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .stat-value { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-top: 6px; font-variant-numeric: tabular-nums; }
+    .stat-note { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+    .pill { display: inline-flex; padding: 4px 10px; border-radius: 999px; font-size: 0.74rem; font-weight: 700; }
+    .pill-low { background: var(--low-soft); color: var(--low); }
+    .pill-medium { background: var(--medium-soft); color: var(--medium); }
+    .pill-high { background: var(--high-soft); color: var(--high); }
+
+    .section { margin: 48px 0 0; }
+    .section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .section-title h2 { font-size: 1.35rem; margin: 0; letter-spacing: -0.02em; }
+    .muted { color: var(--muted); font-size: 0.92rem; }
+
+    /* ---------- Endpoints ---------- */
+    .endpoints { grid-template-columns: 1fr; }
+    .endpoint { display: grid; grid-template-columns: 90px 1fr auto; gap: 18px; align-items: center; padding: 18px 22px; }
+    .method {
+      font-weight: 800; font-size: 0.8rem; letter-spacing: 0.04em;
+      padding: 6px 0; text-align: center; border-radius: 10px;
+      color: #fff;
+    }
+    .m-get { background: #0ea5e9; }
+    .m-post { background: #4f46e5; }
+    .m-delete { background: #dc2626; }
+    .path { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95rem; color: var(--ink); word-break: break-all; }
+    .desc { color: var(--muted); font-size: 0.9rem; margin-top: 2px; }
+    .auth { font-size: 0.72rem; font-weight: 700; color: var(--brand); background: var(--brand-soft); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+    .auth-open { color: var(--low); background: var(--low-soft); }
+
+    /* ---------- Examples ---------- */
+    .examples { grid-template-columns: 1fr 1fr; }
+    pre {
+      margin: 0; padding: 16px 18px; border-radius: 14px;
+      background: #0f172a; color: #e2e8f0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-all;
+    }
+    .example-title { font-weight: 700; margin-bottom: 10px; }
+
+    .note {
+      margin-top: 28px; padding: 18px 20px; border-radius: 16px;
+      background: var(--medium-soft); border: 1px solid #fde68a; color: #78350f; font-size: 0.92rem;
+    }
+    footer { margin: 56px 0 32px; color: var(--muted); font-size: 0.86rem; text-align: center; }
+    footer .gradient-text { font-weight: 700; }
+
+    /* ---------- Motion ---------- */
+    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @keyframes drop { from { opacity: 0; transform: translateY(-100%); } to { opacity: 1; transform: none; } }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(5, 150, 105, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .examples { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .stats { grid-template-columns: 1fr; }
+      .endpoint { grid-template-columns: 1fr; gap: 8px; }
+      .nav-links .btn { display: none; }
+      .nav-links .btn-primary { display: inline-flex; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/">
+        <span class="brand-mark">V</span>
+        <span>VeriFace<span>-X</span> Backend</span>
+      </a>
+      <nav class="nav-links">
+        <a class="btn" href="{% url 'api:stats' %}">Stats</a>
+        <a class="btn" href="/admin/">Admin</a>
+        <a class="btn btn-primary" href="{{ frontend_url }}">Open the app</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <span class="status"><span class="dot"></span> API is online</span>
+      <h1>The analysis engine behind <span class="gradient-text">VeriFace-X</span></h1>
+      <p class="lead">
+        Receives images, runs the forensic checks, and stores each record with its measured signals.
+        Every number on this page is read from the database.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{ frontend_url }}">Open the web app</a>
+        <a class="btn" href="{% url 'api:stats' %}">View live stats (JSON)</a>
+      </div>
+    </section>
+
+    <section class="grid stats">
+      <div class="card">
+        <div class="stat-label">Scans recorded</div>
+        <div class="stat-value">{{ total_scans }}</div>
+        <div class="stat-note">All uploads analysed</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Unique files</div>
+        <div class="stat-value">{{ unique_images }}</div>
+        <div class="stat-note">Distinct SHA-256 fingerprints</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Low risk</div>
+        <div class="stat-value"><span class="pill pill-low">{{ low }}</span></div>
+        <div class="stat-note">0–50 · no strong signals</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">High risk</div>
+        <div class="stat-value"><span class="pill pill-high">{{ high }}</span></div>
+        <div class="stat-note">81–100 · strong indicators</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>Endpoints</h2>
+        <span class="muted">Base path: <code>/api/</code></span>
+      </div>
+      <div class="grid endpoints">
+        <div class="card endpoint">
+          <span class="method m-post">POST</span>
+          <div>
+            <div class="path">/api/scan/</div>
+            <div class="desc">Upload an image (form field <code>image</code>). Returns the record and the report.</div>
+          </div>
+          <span class="auth auth-open">Public</span>
+        </div>
+        <div class="card endpoint">
+          <span class="method m-get">GET</span>
+          <div>
+            <div class="path">/api/scans/?q=</div>
+            <div class="desc">The latest 50 records, optionally filtered by file name or record ID.</div>
+          </div>
+          <span class="auth auth-open">Public</span>
+        </div>
+        <div class="card endpoint">
+          <span class="method m-get">GET</span>
+          <div>
+            <div class="path">/api/scans/&lt;record-id&gt;/</div>
+            <div class="desc">One full record, including every signal and finding.</div>
+          </div>
+          <span class="auth auth-open">Public</span>
+        </div>
+        <div class="card endpoint">
+          <span class="method m-delete">DELETE</span>
+          <div>
+            <div class="path">/api/scans/&lt;record-id&gt;/</div>
+            <div class="desc">Removes a record. Requires an admin login.</div>
+          </div>
+          <span class="auth">Admin only</span>
+        </div>
+        <div class="card endpoint">
+          <span class="method m-get">GET</span>
+          <div>
+            <div class="path">/api/stats/</div>
+            <div class="desc">Counts computed from the database.</div>
+          </div>
+          <span class="auth auth-open">Public</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>Try it</h2>
+        <span class="muted">Copy and run from a terminal</span>
+      </div>
+      <div class="grid examples">
+        <div class="card">
+          <div class="example-title">Scan an image</div>
+          <pre>curl -X POST http://127.0.0.1:8000/api/scan/ \
+  -F "image=@photo.jpg"</pre>
+        </div>
+        <div class="card">
+          <div class="example-title">Read recent records</div>
+          <pre>curl http://127.0.0.1:8000/api/scans/</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="note">
+      <strong>How to read a result.</strong>
+      The score is a manipulation-risk indicator from 0 to 100, not proof that an image is real or fake.
+      Every record lists the checks it used and their limitations.
+      Uploaded images are {% if store_uploads %}stored on this server{% else %}not stored; only their fingerprint and results are kept{% endif %}.
+    </section>
+
+    <footer>
+      <div class="gradient-text">VeriFace-X</div>
+      <div>{{ engine_version }} · Django REST API</div>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,319 @@
+/* ==========================================================================
+   VERIFACE-X · NAVBAR · LIGHT THEME
+   Uses its own "vx-nav" prefix. Colours match the home page tokens.
+   ========================================================================== */
+
+:root {
+  --vx-ink: #0f172a;
+  --vx-ink-2: #334155;
+  --vx-muted: #64748b;
+  --vx-line: #e2e8f0;
+  --vx-line-strong: #cbd5e1;
+  --vx-brand: #4f46e5;
+  --vx-brand-soft: #eef2ff;
+  --vx-gradient: linear-gradient(120deg, #4f46e5 0%, #0ea5e9 55%, #14b8a6 100%);
+  --vx-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Keep section titles clear of the fixed navbar when jumping to an anchor. */
+section[id],
+header[id] {
+  scroll-margin-top: 84px;
+}
+
+/* ---------- Bar ---------- */
+
+.vx-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid transparent;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+  animation: vx-nav-in 0.7s var(--vx-ease) both;
+}
+
+.vx-nav.is-scrolled {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom-color: var(--vx-line);
+  box-shadow: 0 10px 30px -18px rgba(15, 23, 42, 0.25);
+}
+
+.vx-nav-inner {
+  max-width: 1180px;
+  height: 72px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* ---------- Brand ---------- */
+
+.vx-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--vx-ink);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+.vx-brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--vx-gradient);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 20px -10px rgba(79, 70, 229, 0.7);
+  transition: transform 0.5s var(--vx-ease);
+}
+
+.vx-brand:hover .vx-brand-mark {
+  transform: rotate(-8deg) scale(1.06);
+}
+
+.vx-brand-text span {
+  color: var(--vx-brand);
+}
+
+/* ---------- Links ---------- */
+
+.vx-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.vx-link {
+  position: relative;
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--vx-ink-2);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.25s, background 0.25s;
+}
+
+.vx-link:hover {
+  color: var(--vx-brand);
+  background: var(--vx-brand-soft);
+}
+
+.vx-link.is-active {
+  color: var(--vx-brand);
+  font-weight: 600;
+}
+
+.vx-link.is-active::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--vx-gradient);
+  animation: vx-underline 0.5s var(--vx-ease) both;
+}
+
+/* ---------- Actions ---------- */
+
+.vx-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.vx-nav-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: var(--vx-gradient);
+  background-size: 200% 200%;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 10px 22px -12px rgba(79, 70, 229, 0.7);
+  transition: transform 0.25s var(--vx-ease), box-shadow 0.25s;
+}
+
+.vx-nav-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px -14px rgba(79, 70, 229, 0.75);
+}
+
+.vx-nav-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ---------- Mobile burger (hidden on desktop) ---------- */
+
+.vx-burger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--vx-line-strong);
+  background: #ffffff;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+}
+
+.vx-burger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--vx-ink);
+  transition: transform 0.35s var(--vx-ease), opacity 0.25s;
+}
+
+.vx-burger.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.vx-burger.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.vx-burger.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.vx-burger:focus-visible {
+  outline: 3px solid rgba(79, 70, 229, 0.45);
+  outline-offset: 3px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 960px) {
+  .vx-burger {
+    display: inline-flex;
+  }
+
+  /* The link list becomes a dropdown panel under the bar. */
+  .vx-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 12px 18px 18px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--vx-line);
+    box-shadow: 0 18px 30px -20px rgba(15, 23, 42, 0.3);
+  }
+
+  .vx-links.is-open {
+    display: flex;
+    animation: vx-drop 0.35s var(--vx-ease) both;
+  }
+
+  .vx-link {
+    padding: 12px 14px;
+    font-size: 0.98rem;
+  }
+
+  .vx-link.is-active::after {
+    left: 14px;
+    right: auto;
+    width: 32px;
+  }
+}
+
+@media (max-width: 520px) {
+  .vx-nav-cta {
+    display: none;
+  }
+
+  .vx-nav-inner {
+    padding: 0 16px;
+  }
+
+  .vx-brand {
+    font-size: 1rem;
+  }
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes vx-nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vx-underline {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes vx-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .vx-nav,
+  .vx-link.is-active::after,
+  .vx-links.is-open {
+    animation: none;
+  }
+
+  .vx-brand-mark,
+  .vx-nav-cta,
+  .vx-burger span {
+    transition: none;
+  }
+}
+/* Remove browser list bullets from the navbar links. */
+.vx-links,
+.vx-links li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

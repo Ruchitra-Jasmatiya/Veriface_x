@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Django / secrets / data
+.env
+db.sqlite3
+media/
+staticfiles/
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+
+# Logs and editors
+*.log
+npm-debug.log*
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store

@@ -1,0 +1,260 @@
+{
+  "categories": [
+    {
+      "id": "kurti",
+      "label": "Designer Kurtis"
+    },
+    {
+      "id": "sharara",
+      "label": "Royal Shararas"
+    },
+    {
+      "id": "coord",
+      "label": "Co-Ord Sets"
+    },
+    {
+      "id": "plazo",
+      "label": "Classic Plazos"
+    },
+    {
+      "id": "skirt",
+      "label": "Ethnic Skirts"
+    }
+  ],
+  "products": [
+    {
+      "id": "p1",
+      "name": "Royal Kurti Design 1",
+      "category": "kurti",
+      "price": 999,
+      "img": "/shop/1.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p2",
+      "name": "Royal Kurti Design 2",
+      "category": "kurti",
+      "price": 999,
+      "img": "/shop/2.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p3",
+      "name": "Royal Kurti Design 3",
+      "category": "kurti",
+      "price": 999,
+      "img": "/shop/3.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p4",
+      "name": "Royal Kurti Design 4",
+      "category": "kurti",
+      "price": 999,
+      "img": "/shop/4.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "p5",
+      "name": "Royal Sharara Design 1",
+      "category": "sharara",
+      "price": 999,
+      "img": "/shop/5.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p6",
+      "name": "Royal Sharara Design 2",
+      "category": "sharara",
+      "price": 999,
+      "img": "/shop/6.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p7",
+      "name": "Royal Sharara Design 3",
+      "category": "sharara",
+      "price": 999,
+      "img": "/shop/7.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p8",
+      "name": "Royal Sharara Design 4",
+      "category": "sharara",
+      "price": 999,
+      "img": "/shop/8.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "p9",
+      "name": "Royal Coord Design 1",
+      "category": "coord",
+      "price": 999,
+      "img": "/shop/9.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p10",
+      "name": "Royal Coord Design 2",
+      "category": "coord",
+      "price": 999,
+      "img": "/shop/10.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p11",
+      "name": "Royal Coord Design 3",
+      "category": "coord",
+      "price": 999,
+      "img": "/shop/12.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p12",
+      "name": "Royal Plazo Design 1",
+      "category": "plazo",
+      "price": 999,
+      "img": "/shop/13.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p13",
+      "name": "Royal Plazo Design 2",
+      "category": "plazo",
+      "price": 999,
+      "img": "/shop/14.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p14",
+      "name": "Royal Plazo Design 3",
+      "category": "plazo",
+      "price": 999,
+      "img": "/shop/15.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p15",
+      "name": "Royal Skirt Design 1",
+      "category": "skirt",
+      "price": 999,
+      "img": "/shop/16.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p16",
+      "name": "Royal Skirt Design 2",
+      "category": "skirt",
+      "price": 999,
+      "img": "/shop/17.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p17",
+      "name": "Royal Skirt Design 3",
+      "category": "skirt",
+      "price": 999,
+      "img": "/shop/18.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": true
+    },
+    {
+      "id": "p18",
+      "name": "Royal Skirt Design 4",
+      "category": "skirt",
+      "price": 999,
+      "img": "/shop/19.webp",
+      "sizes": [
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "isNew": false
+    }
+  ]
+}

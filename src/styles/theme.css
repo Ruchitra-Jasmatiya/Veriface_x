@@ -1,0 +1,112 @@
+/* =========================================================
+   theme.css  -  EVERY colour, font, radius, shadow and space
+   lives here. Change a value and the whole site re-themes.
+
+   THEMES: Theme A is the default. To try another, set the
+   attribute on <html>, e.g. in the browser console:
+     document.documentElement.setAttribute('data-theme','B')
+   Or edit index.html:  <html data-theme="B">
+   (A = Haldi & Chilli, B = Saffron & Leaf, C = Tomato & Corn)
+   ========================================================= */
+
+:root,
+:root[data-theme='A'] {
+  --brand: #7a1424; /* maroon: buttons, badges, story band */
+  --accent: #f5b61b; /* golden yellow: highlights, stars, hover */
+  --ink: #4a0d16; /* deep maroon: text and the footer band */
+  --paper: #fff3de; /* cream: page background */
+  --paper-2: #fff9ec; /* lighter cream: cards sitting on the page */
+  --fresh: #2e7d32; /* green: veg dot, leaves, success */
+  --on-brand: #fff3de; /* text colour that sits on --brand */
+  --on-ink: #fff3de; /* text colour that sits on --ink */
+}
+
+:root[data-theme='B'] {
+  --brand: #ff7a00;
+  --accent: #1f9d55;
+  --ink: #0f3d2a;
+  --paper: #fff8ec;
+  --paper-2: #fffdf6;
+  --fresh: #37b77a;
+  --on-brand: #0f3d2a;
+  --on-ink: #fff8ec;
+}
+
+:root[data-theme='C'] {
+  --brand: #e8321e;
+  --accent: #ffd43b;
+  --ink: #1e1e1e;
+  --paper: #fff3c4;
+  --paper-2: #fff9de;
+  --fresh: #2fa84f;
+  --on-brand: #ffffff;
+  --on-ink: #fff3c4;
+}
+
+:root {
+  /* white used for card surfaces and text on dark */
+  --white: #ffffff;
+
+  /* Fonts */
+  --font-head: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-hand: 'Caveat', 'Comic Sans MS', cursive;
+
+  /* Type scale (mobile first, grows on larger screens in global.css) */
+  --fs-body: 1rem; /* 16px minimum on mobile */
+  --fs-small: 0.875rem;
+  --fs-h1: clamp(2.5rem, 9vw, 5.5rem);
+  --fs-h2: clamp(2rem, 6vw, 3.5rem);
+  --fs-h3: clamp(1.25rem, 3.5vw, 1.75rem);
+
+  /* Radii */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Sticker outline + hard offset shadows */
+  --line: 3px;
+  --line-thin: 2px;
+  --shadow-sm: 3px 3px 0 var(--ink);
+  --shadow: 5px 5px 0 var(--ink);
+  --shadow-lg: 8px 8px 0 var(--ink);
+
+  /* Spacing scale */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4.5rem;
+  --s-9: 6rem;
+
+  /* Layout */
+  --container: 1200px;
+  --gutter: 1rem;
+  --nav-h: 64px; /* top bar height */
+  --tab-h: 68px; /* mobile bottom tab bar height */
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 180ms;
+  --t-med: 360ms;
+  --t-slow: 560ms;
+
+  /* Layers */
+  --z-nav: 50;
+  --z-tabs: 60;
+  --z-sheet: 80;
+  --z-toast: 90;
+  --z-intro: 100;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 2rem;
+    --nav-h: 76px;
+  }
+}

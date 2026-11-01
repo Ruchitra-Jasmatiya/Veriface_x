@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FreshnFreeze Admin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍨%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --pink:#ec407a;--pink-d:#c2185b;--pink-l:#fce4ec;--pink-m:#f8bbd0;--bg:#fff7fa;--card:#fff;--ink:#2a1a22;--mute:#8a6f7c;--line:#f3d9e3;
+  --ok:#16a34a;--warn:#d97706;--err:#dc2626;--blue:#2563eb;--radius:14px;--shadow:0 4px 18px rgba(236,64,122,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--pink-d)}
+.hidden{display:none!important}
+
+/* ---------- login ---------- */
+#login{min-height:100%;display:grid;place-items:center;padding:20px;background:radial-gradient(1200px 500px at 50% -10%,var(--pink-m),transparent),var(--bg)}
+.login-card{width:100%;max-width:380px;background:#fff;border-radius:20px;padding:34px 30px;box-shadow:0 20px 60px rgba(236,64,122,.18);text-align:center}
+.login-card .logo{font-size:46px}
+.login-card h1{margin:6px 0 4px;font-size:22px}
+.login-card p{margin:0 0 22px;color:var(--mute)}
+.login-card input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;outline:none;font-size:15px;margin-bottom:12px}
+.login-card input:focus{border-color:var(--pink)}
+.err{color:var(--err);font-size:13px;min-height:18px;margin:2px 0 8px}
+
+/* ---------- buttons / form bits ---------- */
+.btn{border:0;border-radius:10px;padding:10px 16px;font-weight:600;background:var(--pink);color:#fff;transition:.15s;white-space:nowrap}
+.btn:hover{background:var(--pink-d)}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.ghost{background:var(--pink-l);color:var(--pink-d)}
+.btn.ghost:hover{background:var(--pink-m)}
+.btn.danger{background:#fee2e2;color:var(--err)}
+.btn.danger:hover{background:#fecaca}
+.btn.ok{background:var(--ok)}
+.btn.sm{padding:6px 10px;font-size:12.5px;border-radius:8px}
+.btn.block{width:100%}
+label.f{display:block;font-weight:600;font-size:12.5px;margin:0 0 5px;color:#5b3b4a}
+.f-in,.f-sel,.f-ta{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;outline:none}
+.f-in:focus,.f-sel:focus,.f-ta:focus{border-color:var(--pink)}
+.f-ta{min-height:80px;resize:vertical}
+.row{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:14px}
+.hint{font-size:12px;color:var(--mute);margin-top:4px}
+.switch{position:relative;display:inline-block;width:38px;height:22px;flex:none}
+.switch input{opacity:0;width:0;height:0}
+.switch span{position:absolute;inset:0;background:#e5d3db;border-radius:22px;transition:.2s;cursor:pointer}
+.switch span:before{content:"";position:absolute;height:16px;width:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch input:checked+span{background:var(--ok)}
+.switch input:checked+span:before{transform:translateX(16px)}
+.chk{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px}
+
+/* ---------- shell ---------- */
+#app{display:grid;grid-template-columns:230px 1fr;min-height:100%}
+aside{background:#fff;border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 10px 16px;font-weight:800;font-size:17px;color:var(--pink-d)}
+.brand span{font-size:26px}
+.nav{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;border:0;background:none;text-align:left;font-weight:600;color:#6b4b59;width:100%}
+.nav:hover{background:var(--pink-l)}
+.nav.on{background:var(--pink);color:#fff}
+.nav .badge{margin-left:auto;background:var(--err);color:#fff;border-radius:20px;font-size:11px;padding:2px 7px}
+.nav.on .badge{background:#fff;color:var(--pink-d)}
+.side-foot{margin-top:auto;display:grid;gap:8px}
+main{padding:26px 28px 60px;min-width:0}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.topbar h2{margin:0;font-size:24px}
+.topbar .sp{flex:1}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--mute);background:#fff;border:1px solid var(--line);padding:6px 10px;border-radius:20px}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(22,163,74,.6);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+#menuBtn{display:none}
+.banner{border-radius:12px;padding:12px 14px;margin-bottom:16px;font-weight:600}
+.banner.red{background:#fee2e2;color:#991b1b}
+.banner.amber{background:#fef3c7;color:#92400e}
+
+/* ---------- cards / tables ---------- */
+.cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:18px}
+.card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border:1px solid #fff}
+.stat .k{color:var(--mute);font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.stat .v{font-size:28px;font-weight:800;margin-top:6px}
+.stat .s{color:var(--mute);font-size:12px;margin-top:2px}
+.grid2{display:grid;gap:16px;grid-template-columns:1.4fr 1fr}
+.card h3{margin:0 0 14px;font-size:15px}
+.bars{display:flex;align-items:flex-end;gap:12px;height:170px;padding-top:10px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar b{width:100%;max-width:46px;background:linear-gradient(180deg,var(--pink),var(--pink-m));border-radius:8px 8px 0 0;min-height:3px;transition:height .5s}
+.bar small{color:var(--mute);font-size:11px}
+.bar em{font-style:normal;font-size:11px;font-weight:700}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.tools .f-in,.tools .f-sel{width:auto;min-width:170px}
+.tablew{overflow-x:auto;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mute);text-align:left;padding:12px 14px;background:#fffafc;border-bottom:1px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid #fbeaf1;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tr.click{cursor:pointer}
+tr.click:hover td{background:#fff7fa}
+.thumb{width:46px;height:46px;border-radius:10px;object-fit:cover;background:var(--pink-l);display:block}
+.pname{display:flex;gap:12px;align-items:center;font-weight:600}
+.pname small{display:block;color:var(--mute);font-weight:400}
+.mrp{color:var(--mute);text-decoration:line-through;font-size:12px;margin-left:6px}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:700;background:var(--pink-l);color:var(--pink-d)}
+.pill.pending{background:#fef3c7;color:#92400e}.pill.confirmed{background:#dbeafe;color:#1e40af}.pill.preparing{background:#ede9fe;color:#5b21b6}
+.pill.out_for_delivery{background:#cffafe;color:#155e75}.pill.delivered{background:#dcfce7;color:#166534}.pill.cancelled{background:#fee2e2;color:#991b1b}
+.pill.off{background:#eee;color:#666}
+.stock{width:74px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;text-align:center}
+.stock.low{border-color:var(--warn);background:#fffbeb}
+.stock.zero{border-color:var(--err);background:#fef2f2}
+.acts{display:flex;gap:6px;justify-content:flex-end}
+.empty{padding:44px 20px;text-align:center;color:var(--mute)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:6px 13px;font-weight:600;font-size:12.5px;color:#6b4b59}
+.chip.on{background:var(--pink);border-color:var(--pink);color:#fff}
+.catgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.catcard{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.catcard img{width:100%;height:130px;object-fit:cover;display:block;background:var(--pink-l)}
+.catcard .b{padding:14px}
+.catcard h4{margin:0 0 4px;font-size:15px}
+.catcard .m{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.list-line{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.list-line:last-child{border:0}
+.list-line .g{flex:1;min-width:0}
+.list-line .g b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- modal ---------- */
+#modal{position:fixed;inset:0;background:rgba(42,26,34,.55);display:flex;justify-content:center;align-items:flex-start;padding:30px 14px;overflow:auto;z-index:50;backdrop-filter:blur(3px)}
+.mbox{background:#fff;border-radius:18px;width:100%;max-width:720px;box-shadow:0 30px 80px rgba(0,0,0,.3);animation:pop .18s ease-out}
+@keyframes pop{from{transform:translateY(14px);opacity:0}}
+.mhead{display:flex;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line)}
+.mhead h3{margin:0;flex:1;font-size:18px}
+.x{border:0;background:var(--pink-l);width:32px;height:32px;border-radius:50%;font-size:18px;color:var(--pink-d)}
+.mbody{padding:20px 22px}
+.mfoot{padding:14px 22px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.imgfield{display:flex;gap:10px;align-items:center}
+.imgfield img{width:54px;height:54px;border-radius:10px;object-fit:cover;background:var(--pink-l);flex:none}
+.imgfield .f-in{flex:1;min-width:0}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;margin-bottom:14px}
+.kv dt{color:var(--mute);font-weight:600}.kv dd{margin:0}
+.tl{border-left:2px solid var(--pink-m);margin-left:6px;padding-left:14px}
+.tl div{position:relative;padding:4px 0;font-size:13px}
+.tl div:before{content:"";position:absolute;left:-20px;top:10px;width:10px;height:10px;border-radius:50%;background:var(--pink)}
+.totals{margin-left:auto;max-width:280px}
+.totals div{display:flex;justify-content:space-between;padding:3px 0}
+.totals .t{font-weight:800;font-size:16px;border-top:1px solid var(--line);margin-top:6px;padding-top:8px}
+#toasts{position:fixed;right:16px;bottom:16px;display:grid;gap:8px;z-index:100}
+.toast{background:#2a1a22;color:#fff;padding:12px 16px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:pop .2s;max-width:320px}
+.toast.err{background:var(--err)}.toast.ok{background:var(--ok)}
+.sect{margin-bottom:22px}
+.sect h3{margin:0 0 4px}.sect>p{margin:0 0 14px;color:var(--mute)}
+
+@media (max-width:880px){
+  #app{grid-template-columns:1fr}
+  aside{position:fixed;left:0;top:0;bottom:0;width:250px;z-index:40;transform:translateX(-102%);transition:.2s;box-shadow:0 0 40px rgba(0,0,0,.2)}
+  aside.open{transform:none}
+  #menuBtn{display:inline-block}
+  main{padding:18px 14px 60px}
+  .grid2{grid-template-columns:1fr}
+}
+@media print{body *{visibility:hidden}}
+</style>
+</head>
+<body>
+
+<!-- ============================== LOGIN ============================== -->
+<section id="login" class="hidden">
+  <form class="login-card" id="loginForm">
+    <div class="logo">🍨</div>
+    <h1>FreshnFreeze Admin</h1>
+    <p>Sign in to manage your shop</p>
+    <input type="password" id="pw" placeholder="Admin password" autocomplete="current-password" autofocus required>
+    <div class="err" id="loginErr"></div>
+    <button class="btn block" id="loginBtn">Sign in</button>
+  </form>
+</section>
+
+<!-- ============================== APP ============================== -->
+<div id="app" class="hidden">
+  <aside id="side">
+    <div class="brand"><span>🍨</span>FreshnFreeze</div>
+    <button class="nav" data-view="dashboard">📊 Dashboard</button>
+    <button class="nav" data-view="orders">🧾 Orders <span class="badge hidden" id="ordBadge">0</span></button>
+    <button class="nav" data-view="products">🍦 Ice creams</button>
+    <button class="nav" data-view="categories">🗂️ Categories</button>
+    <button class="nav" data-view="coupons">🎟️ Coupons</button>
+    <button class="nav" data-view="settings">⚙️ Settings</button>
+    <div class="side-foot">
+      <a class="btn ghost block" href="/" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">🌐 View website</a>
+      <button class="btn danger block" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+  <main>
+    <div class="topbar">
+      <button class="btn ghost" id="menuBtn">☰</button>
+      <h2 id="title"></h2>
+      <div class="sp"></div>
+      <span class="live"><i></i>Changes go live instantly</span>
+    </div>
+    <div id="banner"></div>
+    <div id="view"></div>
+  </main>
+</div>
+<div id="modal" class="hidden"></div>
+<div id="toasts"></div>
+
+<script>
+'use strict';
+/* =============================== helpers =============================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const inr = (n) => '₹' + Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+const when = (t) => new Date(t).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+const STATUS = { pending: 'Pending', confirmed: 'Confirmed', preparing: 'Preparing', out_for_delivery: 'Out for delivery', delivered: 'Delivered', cancelled: 'Cancelled' };
+const NEXT = { pending: 'confirmed', confirmed: 'preparing', preparing: 'out_for_delivery', out_for_delivery: 'delivered' };
+const NEXT_LABEL = { confirmed: 'Confirm order', preparing: 'Start preparing', out_for_delivery: 'Out for delivery', delivered: 'Mark delivered' };
+
+let bc = null; try { bc = new BroadcastChannel('fnf-sync'); } catch {}
+async function api(method, path, body) {
+  const r = await fetch('/api' + path, { method, credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'fnf-admin' }, body: body !== undefined ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401 && !path.includes('/admin/login')) { showLogin(); throw new Error('Please log in again'); }
+  if (!r.ok) throw new Error(j.error || 'Request failed (' + r.status + ')');
+  if (method !== 'GET' && bc) bc.postMessage('catalog'); // same-browser storefront tabs update instantly
+  return j;
+}
+function toast(msg, kind = '') {
+  const d = document.createElement('div'); d.className = 'toast ' + kind; d.textContent = msg;
+  $('#toasts').appendChild(d); setTimeout(() => d.remove(), 4200);
+}
+async function act(btn, fn, okMsg) {
+  const old = btn && btn.textContent; if (btn) { btn.disabled = true; }
+  try { const r = await fn(); if (okMsg) toast(okMsg, 'ok'); return r; }
+  catch (e) { toast(e.message, 'err'); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = old; } }
+}
+function beep() {
+  try { const c = new (window.AudioContext || window.webkitAudioContext)(); const o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.frequency.value = 880; g.gain.setValueAtTime(.15, c.currentTime); g.gain.exponentialRampToValueAtTime(.001, c.currentTime + .5); o.start(); o.stop(c.currentTime + .5); } catch {}
+}
+function openModal(title, body, foot) {
+  const m = $('#modal');
+  m.innerHTML = `<div class="mbox"><div class="mhead"><h3>${esc(title)}</h3><button class="x" data-close>&times;</button></div><div class="mbody">${body}</div>${foot ? `<div class="mfoot">${foot}</div>` : ''}</div>`;
+  m.classList.remove('hidden'); document.body.style.overflow = 'hidden';
+  m.onclick = (e) => { if (e.target === m || e.target.hasAttribute('data-close')) closeModal(); };
+  return m;
+}
+function closeModal() { $('#modal').classList.add('hidden'); $('#modal').innerHTML = ''; document.body.style.overflow = ''; }
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+const sw = (checked, attrs = '') => `<label class="switch"><input type="checkbox" ${checked ? 'checked' : ''} ${attrs}><span></span></label>`;
+
+/* ---- image upload: compress in the browser, then store via API ---- */
+function compress(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let max = 900; const useWebp = document.createElement('canvas').toDataURL('image/webp').startsWith('data:image/webp');
+      const type = file.type === 'image/gif' && file.size < 500000 ? 'image/gif' : useWebp ? 'image/webp' : 'image/jpeg';
+      if (type === 'image/gif') { const fr = new FileReader(); fr.onload = () => resolve(fr.result); fr.readAsDataURL(file); return; }
+      for (let q = 0.85; ; q -= 0.1) {
+        const sc = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas'); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        const d = c.toDataURL(type, q);
+        if (d.length * 0.75 < 450000 || (q < 0.4 && max < 500)) { URL.revokeObjectURL(url); return resolve(d); }
+        if (q < 0.45) { max *= 0.75; q = 0.95; }
+      }
+    };
+    img.onerror = () => reject(new Error('Could not read that image'));
+    img.src = url;
+  });
+}
+function imageField(name, label, value) {
+  return `<div><label class="f">${label}</label><div class="imgfield" data-imgfield>
+    <img src="${esc(value || '')}" alt="" onerror="this.style.visibility='hidden'" onload="this.style.visibility='visible'">
+    <input class="f-in" name="${name}" value="${esc(value || '')}" placeholder="Paste image link or upload →">
+    <label class="btn ghost sm" style="cursor:pointer">Upload<input type="file" accept="image/*" hidden></label></div></div>`;
+}
+document.addEventListener('change', async (e) => {
+  const fi = e.target.closest('[data-imgfield] input[type=file]'); if (!fi || !fi.files[0]) return;
+  const box = fi.closest('[data-imgfield]'); const btn = fi.parentElement; const old = btn.firstChild.textContent; btn.firstChild.textContent = 'Uploading…';
+  try {
+    const dataUrl = await compress(fi.files[0]);
+    const r = await api('POST', '/admin/upload', { dataUrl });
+    $('input.f-in', box).value = r.url; $('img', box).src = r.url; toast('Image uploaded', 'ok');
+  } catch (err) { toast(err.message, 'err'); }
+  btn.firstChild.textContent = old; fi.value = '';
+});
+document.addEventListener('input', (e) => { const i = e.target.closest('[data-imgfield] input.f-in'); if (i) $('img', i.closest('[data-imgfield]')).src = i.value; });
+
+/* =============================== state & shell =============================== */
+const S = { view: 'dashboard', storage: null, lastOrderId: null, pending: 0, cats: [], filters: { pStatus: 'all', pq: '', pcat: '', oq: '' } };
+const TITLES = { dashboard: 'Dashboard', orders: 'Orders', products: 'Ice creams', categories: 'Categories', coupons: 'Coupons', settings: 'Settings' };
+
+function showLogin() { $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); setTimeout(() => $('#pw').focus(), 50); clearInterval(S.poll); }
+async function boot() {
+  try {
+    const s = await fetch('/api/admin/session', { credentials: 'same-origin' }).then((r) => r.json());
+    S.storage = s.storage;
+    if (!s.authenticated) return showLogin();
+    enter();
+  } catch { showLogin(); $('#loginErr').textContent = 'Cannot reach the server'; }
+}
+function enter() {
+  $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
+  const v = location.hash.slice(1); go(TITLES[v] ? v : 'dashboard');
+  clearInterval(S.poll); S.poll = setInterval(pollOrders, 8000); pollOrders(true);
+}
+$('#loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); const b = $('#loginBtn'); b.disabled = true; $('#loginErr').textContent = '';
+  try { await api('POST', '/admin/login', { password: $('#pw').value }); $('#pw').value = ''; const s = await fetch('/api/admin/session', { credentials: 'same-origin' }).then((r) => r.json()); S.storage = s.storage; enter(); }
+  catch (err) { $('#loginErr').textContent = err.message; }
+  b.disabled = false;
+});
+$('#logoutBtn').onclick = async () => { await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'fnf-admin' }, body: '{}' }); showLogin(); };
+$('#menuBtn').onclick = () => $('#side').classList.toggle('open');
+$$('.nav').forEach((b) => b.onclick = () => { go(b.dataset.view); $('#side').classList.remove('open'); });
+window.addEventListener('hashchange', () => { const v = location.hash.slice(1); if (TITLES[v] && v !== S.view && !$('#app').classList.contains('hidden')) go(v); });
+
+function go(view) {
+  S.view = view; location.hash = view; $('#title').textContent = TITLES[view];
+  $$('.nav').forEach((b) => b.classList.toggle('on', b.dataset.view === view));
+  const b = $('#banner');
+  b.innerHTML = S.storage && !S.storage.persistent ? `<div class="banner red">⚠️ Database not connected — anything you change will be LOST when the server restarts. Connect Upstash Redis in Vercel (see README, step 2).</div>` : '';
+  $('#view').innerHTML = '<div class="empty">Loading…</div>';
+  VIEWS[view]().catch((e) => { $('#view').innerHTML = `<div class="empty">⚠️ ${esc(e.message)}</div>`; });
+}
+async function pollOrders(first) {
+  try {
+    const s = await api('GET', '/admin/stats?tz=' + -new Date().getTimezoneOffset());
+    const badge = $('#ordBadge'); badge.textContent = s.pending; badge.classList.toggle('hidden', !s.pending);
+    if (!first && S.lastOrderId !== null && s.lastOrderId > S.lastOrderId) {
+      beep(); toast('🔔 New order received!', 'ok');
+      if (S.view === 'orders' || S.view === 'dashboard') VIEWS[S.view]();
+    }
+    S.lastOrderId = s.lastOrderId; S.pending = s.pending;
+  } catch {}
+}
+
+/* =============================== DASHBOARD =============================== */
+const VIEWS = {};
+VIEWS.dashboard = async () => {
+  const s = await api('GET', '/admin/stats?tz=' + -new Date().getTimezoneOffset());
+  const max = Math.max(1, ...s.days.map((d) => d.revenue));
+  $('#view').innerHTML = `
+  <div class="cards">
+    <div class="card stat"><div class="k">Today's orders</div><div class="v">${s.today.orders}</div><div class="s">${inr(s.today.revenue)} revenue</div></div>
+    <div class="card stat"><div class="k">Pending orders</div><div class="v" style="color:${s.pending ? 'var(--warn)' : 'inherit'}">${s.pending}</div><div class="s">waiting for confirmation</div></div>
+    <div class="card stat"><div class="k">Total revenue</div><div class="v">${inr(s.totals.revenue)}</div><div class="s">${s.totals.orders} orders overall</div></div>
+    <div class="card stat"><div class="k">Ice creams</div><div class="v">${s.totals.activeProducts}<small style="font-size:14px;color:var(--mute)"> / ${s.totals.products}</small></div><div class="s">live on website · ${s.totals.categories} categories</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Revenue — last 7 days</h3><div class="bars">${s.days.map((d) => `<div class="bar" title="${d.orders} orders"><em>${d.revenue ? inr(d.revenue) : ''}</em><b style="height:${Math.round(d.revenue / max * 100)}%"></b><small>${new Date(d.date + 'T00:00').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' })}</small></div>`).join('')}</div></div>
+    <div class="card"><h3>🏆 Best sellers</h3>${s.topSellers.filter((t) => t.sold).map((t) => `<div class="list-line"><img class="thumb" style="width:38px;height:38px" src="${esc(t.image)}" alt=""><div class="g"><b>${esc(t.name)}</b></div><span class="pill">${t.sold} sold</span></div>`).join('') || '<div class="empty">No sales yet</div>'}</div>
+  </div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="card"><h3>Recent orders</h3>${s.recent.map((o) => `<div class="list-line" style="cursor:pointer" data-open-order="${o.id}"><div class="g"><b>${esc(o.number)} · ${esc(o.name)}</b><small style="color:var(--mute)">${when(o.createdAt)}</small></div><b>${inr(o.total)}</b><span class="pill ${o.status}">${STATUS[o.status]}</span></div>`).join('') || '<div class="empty">No orders yet — they will appear here instantly.</div>'}</div>
+    <div class="card"><h3>⚠️ Low stock</h3>${s.lowStock.map((p) => `<div class="list-line"><div class="g"><b>${esc(p.name)}</b></div><span class="pill ${p.stock ? 'pending' : 'cancelled'}">${p.stock ? p.stock + ' left' : 'Out of stock'}</span></div>`).join('') || '<div class="empty">All good 🎉</div>'}</div>
+  </div>`;
+};
+document.addEventListener('click', (e) => { const o = e.target.closest('[data-open-order]'); if (o) orderModal(Number(o.dataset.openOrder)); });
+
+/* =============================== ORDERS =============================== */
+let ORDERS = [];
+VIEWS.orders = async () => {
+  const { orders } = await api('GET', '/admin/orders?limit=200'); ORDERS = orders;
+  renderOrders();
+};
+function renderOrders() {
+  const f = S.filters; const q = f.oq.toLowerCase();
+  const counts = {}; ORDERS.forEach((o) => counts[o.status] = (counts[o.status] || 0) + 1);
+  const list = ORDERS.filter((o) => (f.pStatus === 'all' || o.status === f.pStatus) && (!q || `${o.number} ${o.customer.name} ${o.customer.phone}`.toLowerCase().includes(q)));
+  $('#view').innerHTML = `
+  <div class="chips">${['all', ...Object.keys(STATUS)].map((k) => `<button class="chip ${f.pStatus === k ? 'on' : ''}" data-ostatus="${k}">${k === 'all' ? 'All' : STATUS[k]} (${k === 'all' ? ORDERS.length : counts[k] || 0})</button>`).join('')}</div>
+  <div class="tools"><input class="f-in" id="oq" placeholder="Search order #, name, phone…" value="${esc(f.oq)}"><button class="btn ghost" id="orefresh">↻ Refresh</button></div>
+  <div class="tablew">${list.length ? `<table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Placed</th></tr></thead><tbody>${list.map((o) => `
+    <tr class="click" data-open-order="${o.id}"><td><b>${esc(o.number)}</b></td><td>${esc(o.customer.name)}<br><small style="color:var(--mute)">${esc(o.customer.phone)}</small></td>
+    <td>${o.items.reduce((n, i) => n + i.qty, 0)} · <small style="color:var(--mute)">${esc(o.items.map((i) => i.name).join(', ').slice(0, 38))}</small></td><td><b>${inr(o.total)}</b></td>
+    <td><span class="pill ${o.status}">${STATUS[o.status]}</span></td><td>${when(o.createdAt)}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">No orders here yet 🍨</div>'}</div>`;
+  $$('[data-ostatus]').forEach((b) => b.onclick = () => { S.filters.pStatus = b.dataset.ostatus; renderOrders(); });
+  const qi = $('#oq'); qi.oninput = () => { S.filters.oq = qi.value; const pos = qi.selectionStart; renderOrders(); const n = $('#oq'); n.focus(); n.setSelectionRange(pos, pos); };
+  $('#orefresh').onclick = () => VIEWS.orders();
+}
+async function orderModal(id) {
+  let o = ORDERS.find((x) => x.id === id);
+  if (!o) { const r = await api('GET', '/admin/orders?limit=200'); ORDERS = r.orders; o = ORDERS.find((x) => x.id === id); }
+  if (!o) return toast('Order not found', 'err');
+  const c = o.customer; const digits = c.phone.replace(/\D/g, '');
+  const next = NEXT[o.status];
+  const m = openModal(`Order ${o.number}`, `
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px"><span class="pill ${o.status}">${STATUS[o.status]}</span><small style="color:var(--mute)">${when(o.createdAt)} · ${esc(o.payment)}</small></div>
+    <dl class="kv"><dt>Customer</dt><dd><b>${esc(c.name)}</b></dd><dt>Phone</dt><dd><a href="tel:${esc(c.phone)}">${esc(c.phone)}</a> · <a target="_blank" rel="noopener" href="https://wa.me/${esc(digits.length === 10 ? '91' + digits : digits)}">WhatsApp</a></dd>
+    ${c.email ? `<dt>Email</dt><dd>${esc(c.email)}</dd>` : ''}<dt>Address</dt><dd>${esc(c.address)}${c.city ? ', ' + esc(c.city) : ''}${c.pincode ? ' - ' + esc(c.pincode) : ''}</dd>${c.note ? `<dt>Note</dt><dd>${esc(c.note)}</dd>` : ''}</dl>
+    <div class="tablew" style="box-shadow:none;border:1px solid var(--line);margin-bottom:14px"><table style="min-width:0"><tbody>${o.items.map((i) => `<tr><td style="width:56px"><img class="thumb" src="${esc(i.image)}" alt=""></td><td><b>${esc(i.name)}</b><br><small style="color:var(--mute)">${inr(i.price)} × ${i.qty}</small></td><td style="text-align:right"><b>${inr(i.lineTotal)}</b></td></tr>`).join('')}</tbody></table></div>
+    <div class="totals"><div><span>Subtotal</span><span>${inr(o.subtotal)}</span></div>${o.discount ? `<div style="color:var(--ok)"><span>Discount (${esc(o.coupon)})</span><span>−${inr(o.discount)}</span></div>` : ''}<div><span>Delivery</span><span>${o.delivery ? inr(o.delivery) : 'FREE'}</span></div><div class="t"><span>Total</span><span>${inr(o.total)}</span></div></div>
+    <h4 style="margin:18px 0 8px">Timeline</h4><div class="tl">${o.history.map((h) => `<div><b>${STATUS[h.status]}</b> <small style="color:var(--mute)">${when(h.at)}</small></div>`).join('')}</div>`,
+    `<button class="btn danger sm" data-del>Delete</button><button class="btn ghost sm" data-print>🖨 Print slip</button>
+     ${o.status !== 'cancelled' && o.status !== 'delivered' ? '<button class="btn danger" data-cancel>Cancel order</button>' : ''}
+     ${next ? `<button class="btn ok" data-next="${next}">${NEXT_LABEL[next]} →</button>` : ''}`);
+  const setStatus = (btn, st) => act(btn, async () => { await api('PATCH', '/admin/orders/' + o.id, { status: st }); closeModal(); toast('Order updated', 'ok'); S.view === 'orders' ? VIEWS.orders() : VIEWS.dashboard(); pollOrders(true); });
+  const n = $('[data-next]', m); if (n) n.onclick = () => setStatus(n, n.dataset.next);
+  const cn = $('[data-cancel]', m); if (cn) cn.onclick = () => confirm('Cancel this order? Stock will be returned.') && setStatus(cn, 'cancelled');
+  $('[data-del]', m).onclick = (e) => confirm('Permanently delete this order record?') && act(e.target, async () => { await api('DELETE', '/admin/orders/' + o.id); closeModal(); S.view === 'orders' ? VIEWS.orders() : VIEWS.dashboard(); });
+  $('[data-print]', m).onclick = () => {
+    const w = window.open('', '_blank', 'width=420,height=640'); if (!w) return;
+    w.document.write(`<title>${esc(o.number)}</title><body style="font-family:monospace;padding:14px;width:320px"><h3 style="text-align:center;margin:0">FreshnFreeze</h3><p style="text-align:center;margin:2px 0 10px">${esc(o.number)} · ${when(o.createdAt)}</p><hr>${o.items.map((i) => `<div style="display:flex;justify-content:space-between"><span>${i.qty}× ${esc(i.name)}</span><span>${inr(i.lineTotal)}</span></div>`).join('')}<hr><div style="display:flex;justify-content:space-between"><span>Delivery</span><span>${o.delivery ? inr(o.delivery) : 'FREE'}</span></div>${o.discount ? `<div style="display:flex;justify-content:space-between"><span>Discount</span><span>-${inr(o.discount)}</span></div>` : ''}<h3 style="display:flex;justify-content:space-between;margin:6px 0"><span>TOTAL</span><span>${inr(o.total)}</span></h3><hr><b>${esc(c.name)}</b><br>${esc(c.phone)}<br>${esc(c.address)} ${esc(c.pincode)}<br>${esc(c.note)}<p style="text-align:center">Cash on delivery · Thank you! 🍨</p><script>onload=()=>print()<\/script>`);
+    w.document.close();
+  };
+}
+
+/* =============================== PRODUCTS =============================== */
+let PRODUCTS = [];
+VIEWS.products = async () => {
+  const [p, c] = await Promise.all([api('GET', '/admin/products'), api('GET', '/admin/categories')]);
+  PRODUCTS = p.products; S.cats = c.categories; renderProducts();
+};
+function renderProducts() {
+  const f = S.filters; const q = f.pq.toLowerCase();
+  const list = PRODUCTS.filter((p) => (!f.pcat || String(p.categoryId) === f.pcat) && (!q || `${p.name} ${p.category}`.toLowerCase().includes(q)));
+  $('#view').innerHTML = `
+  <div class="tools"><input class="f-in" id="pq" placeholder="Search ice creams…" value="${esc(f.pq)}">
+    <select class="f-sel" id="pcat"><option value="">All categories</option>${S.cats.map((c) => `<option value="${c.id}" ${String(c.id) === f.pcat ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
+    <div style="flex:1"></div><button class="btn" id="addP">＋ Add ice cream</button></div>
+  <div class="tablew">${list.length ? `<table><thead><tr><th>Ice cream</th><th>Category</th><th>Price</th><th>Stock</th><th>Live</th><th>★</th><th></th></tr></thead><tbody>${list.map((p) => `
+    <tr data-id="${p.id}"><td><div class="pname"><img class="thumb" src="${esc(p.image1)}" alt="" onerror="this.style.opacity=.2"><div>${esc(p.name)}<small>${p.vegetarian ? '🟢 Veg' : '🔴 Non-veg'} · ${p.sold || 0} sold</small></div></div></td>
+    <td>${p.category ? esc(p.category) : '<span class="pill off">none</span>'}</td>
+    <td><b>${inr(p.price)}</b>${p.mrp > p.price ? `<span class="mrp">${inr(p.mrp)}</span>` : ''}</td>
+    <td>${p.trackStock === false ? '<span class="pill">Unlimited</span>' : `<input class="stock ${p.stock === 0 ? 'zero' : p.stock <= 5 ? 'low' : ''}" type="number" min="0" value="${p.stock}" data-stock>`}</td>
+    <td>${sw(p.active, 'data-active')}</td><td>${sw(p.featured, 'data-featured')}</td>
+    <td><div class="acts"><button class="btn ghost sm" data-edit>Edit</button><button class="btn ghost sm" data-dup title="Duplicate">⧉</button><button class="btn danger sm" data-del>🗑</button></div></td></tr>`).join('')}</tbody></table>` : '<div class="empty">No ice creams found. Click “Add ice cream” to create one.</div>'}</div>`;
+  $('#pq').oninput = (e) => { S.filters.pq = e.target.value; const pos = e.target.selectionStart; renderProducts(); const n = $('#pq'); n.focus(); n.setSelectionRange(pos, pos); };
+  $('#pcat').onchange = (e) => { S.filters.pcat = e.target.value; renderProducts(); };
+  $('#addP').onclick = () => productModal();
+}
+document.addEventListener('change', async (e) => {
+  const tr = e.target.closest('#view tr[data-id]'); if (!tr || S.view !== 'products') return;
+  const id = tr.dataset.id; const p = PRODUCTS.find((x) => String(x.id) === id);
+  let patch = null;
+  if (e.target.matches('[data-active]')) patch = { active: e.target.checked };
+  else if (e.target.matches('[data-featured]')) patch = { featured: e.target.checked };
+  else if (e.target.matches('[data-stock]')) patch = { stock: Math.max(0, parseInt(e.target.value || '0', 10)) };
+  if (!patch) return;
+  try { const r = await api('PATCH', '/admin/products/' + id, patch); Object.assign(p, r.product); toast(patch.active !== undefined ? (patch.active ? 'Now visible on website' : 'Hidden from website') : 'Saved', 'ok'); if ('stock' in patch) renderProducts(); }
+  catch (err) { toast(err.message, 'err'); renderProducts(); }
+});
+document.addEventListener('click', async (e) => {
+  const tr = e.target.closest('#view tr[data-id]'); if (!tr || S.view !== 'products') return;
+  const p = PRODUCTS.find((x) => String(x.id) === tr.dataset.id);
+  if (e.target.closest('[data-edit]')) productModal(p);
+  else if (e.target.closest('[data-dup]')) act(e.target, async () => { await api('POST', `/admin/products/${p.id}/duplicate`, {}); VIEWS.products(); }, 'Duplicated (hidden until you publish it)');
+  else if (e.target.closest('[data-del]')) { if (confirm(`Delete “${p.name}” permanently?`)) act(e.target, async () => { await api('DELETE', '/admin/products/' + p.id); VIEWS.products(); }, 'Deleted'); }
+});
+function productModal(p) {
+  const e = !!p; p = p || { name: '', price: '', mrp: '', categoryId: S.cats[0]?.id, stock: 50, trackStock: true, vegetarian: true, active: true, featured: false, ingredients: [], description: '', image1: '', image2: '' };
+  const m = openModal(e ? 'Edit ice cream' : 'Add ice cream', `
+  <form id="pf">
+    <div class="row"><div><label class="f">Name *</label><input class="f-in" name="name" value="${esc(p.name)}" required maxlength="120"></div>
+      <div><label class="f">Category *</label><select class="f-sel" name="categoryId">${S.cats.map((c) => `<option value="${c.id}" ${c.id === p.categoryId ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div></div>
+    <div class="row"><div><label class="f">Selling price (₹) *</label><input class="f-in" name="price" type="number" min="0" step="0.01" value="${esc(p.price)}" required></div>
+      <div><label class="f">MRP / original price (₹)</label><input class="f-in" name="mrp" type="number" min="0" step="0.01" value="${p.mrp > p.price ? esc(p.mrp) : ''}" placeholder="Shows a discount badge"><div class="hint">Optional — leave empty for no discount</div></div>
+      <div><label class="f">Stock</label><input class="f-in" name="stock" type="number" min="0" value="${esc(p.stock)}"></div></div>
+    <div class="row">${imageField('image1', 'Main image', p.image1)}${imageField('image2', 'Hover image (optional)', p.image2 === p.image1 ? '' : p.image2)}</div>
+    <div style="margin-bottom:14px"><label class="f">Description</label><textarea class="f-ta" name="description" maxlength="1200">${esc(p.description)}</textarea></div>
+    <div style="margin-bottom:14px"><label class="f">Ingredients</label><textarea class="f-ta" name="ingredients" placeholder="One per line">${esc((p.ingredients || []).join('\n'))}</textarea></div>
+    <div class="row" style="margin-bottom:0"><label class="chk">${sw(p.vegetarian, 'name="vegetarian"')} Vegetarian</label><label class="chk">${sw(p.trackStock !== false, 'name="trackStock"')} Track stock</label><label class="chk">${sw(p.active, 'name="active"')} Visible on website</label><label class="chk">${sw(p.featured, 'name="featured"')} Featured ★</label></div>
+  </form>`, `<button class="btn ghost" data-close>Cancel</button><button class="btn" id="saveP">${e ? 'Save changes' : 'Add to website'}</button>`);
+  $('#saveP', m).onclick = (ev) => {
+    const f = $('#pf', m); if (!f.reportValidity()) return;
+    const d = Object.fromEntries(new FormData(f));
+    for (const k of ['vegetarian', 'trackStock', 'active', 'featured']) d[k] = f.elements[k].checked;
+    d.categoryId = Number(d.categoryId);
+    act(ev.target, async () => { await (e ? api('PUT', '/admin/products/' + p.id, d) : api('POST', '/admin/products', d)); closeModal(); VIEWS.products(); }, e ? 'Saved — live on website' : 'Added — live on website');
+  };
+}
+
+/* =============================== CATEGORIES =============================== */
+VIEWS.categories = async () => {
+  const { categories } = await api('GET', '/admin/categories'); S.cats = categories;
+  $('#view').innerHTML = `<div class="tools"><div style="flex:1"></div><button class="btn" id="addC">＋ Add category</button></div>
+  <div class="catgrid">${categories.map((c) => `<div class="catcard" data-id="${c.id}"><img src="${esc(c.image)}" alt="" onerror="this.style.opacity=.2"><div class="b"><h4>${esc(c.name)}</h4><small style="color:var(--mute)">${c.productCount} ice cream${c.productCount === 1 ? '' : 's'} · order ${c.sortOrder ?? '-'}</small>
+    <div class="m">${sw(c.active, 'data-cactive')}<div class="acts"><button class="btn ghost sm" data-cedit>Edit</button><button class="btn danger sm" data-cdel>🗑</button></div></div></div></div>`).join('') || '<div class="empty">No categories yet</div>'}</div>`;
+  $('#addC').onclick = () => categoryModal();
+  $$('.catcard').forEach((el) => {
+    const c = categories.find((x) => String(x.id) === el.dataset.id);
+    $('[data-cedit]', el).onclick = () => categoryModal(c);
+    $('[data-cdel]', el).onclick = (ev) => confirm(`Delete category “${c.name}”?`) && act(ev.target, async () => { await api('DELETE', '/admin/categories/' + c.id); VIEWS.categories(); }, 'Deleted');
+    $('[data-cactive]', el).onchange = (ev) => act(null, async () => { await api('PUT', '/admin/categories/' + c.id, { ...c, active: ev.target.checked }); }, ev.target.checked ? 'Category visible' : 'Category hidden (its ice creams are hidden too)');
+  });
+};
+function categoryModal(c) {
+  const e = !!c; c = c || { name: '', image: '', description: '', active: true, sortOrder: '' };
+  const m = openModal(e ? 'Edit category' : 'Add category', `<form id="cf">
+    <div class="row"><div><label class="f">Name *</label><input class="f-in" name="name" value="${esc(c.name)}" required maxlength="60"></div><div><label class="f">Display order</label><input class="f-in" name="sortOrder" type="number" value="${esc(c.sortOrder)}" placeholder="1 = first"></div></div>
+    <div style="margin-bottom:14px">${imageField('image', 'Category image', c.image)}</div>
+    <div style="margin-bottom:14px"><label class="f">Description</label><input class="f-in" name="description" value="${esc(c.description)}" maxlength="300"></div>
+    <label class="chk">${sw(c.active, 'name="active"')} Visible on website</label></form>`,
+    `<button class="btn ghost" data-close>Cancel</button><button class="btn" id="saveC">${e ? 'Save' : 'Add category'}</button>`);
+  $('#saveC', m).onclick = (ev) => {
+    const f = $('#cf', m); if (!f.reportValidity()) return; const d = Object.fromEntries(new FormData(f)); d.active = f.elements.active.checked;
+    act(ev.target, async () => { await (e ? api('PUT', '/admin/categories/' + c.id, d) : api('POST', '/admin/categories', d)); closeModal(); VIEWS.categories(); }, 'Saved — live on website');
+  };
+}
+
+/* =============================== COUPONS =============================== */
+VIEWS.coupons = async () => {
+  const { coupons } = await api('GET', '/admin/coupons');
+  $('#view').innerHTML = `<div class="tools"><div style="flex:1"></div><button class="btn" id="addK">＋ New coupon</button></div>
+  <div class="tablew">${coupons.length ? `<table><thead><tr><th>Code</th><th>Discount</th><th>Min order</th><th>Used</th><th>Expires</th><th>Active</th><th></th></tr></thead><tbody>${coupons.map((c) => `<tr data-code="${esc(c.code)}">
+    <td><b>${esc(c.code)}</b><br><small style="color:var(--mute)">${esc(c.description)}</small></td><td>${c.type === 'percent' ? c.value + '%' + (c.maxDiscount ? ` (max ${inr(c.maxDiscount)})` : '') : inr(c.value)}</td><td>${c.minOrder ? inr(c.minOrder) : '—'}</td>
+    <td>${c.used}${c.usageLimit ? ' / ' + c.usageLimit : ''}</td><td>${c.expiresAt ? when(c.expiresAt) : 'Never'}</td><td>${sw(c.active, 'data-kactive')}</td>
+    <td><div class="acts"><button class="btn ghost sm" data-kedit>Edit</button><button class="btn danger sm" data-kdel>🗑</button></div></td></tr>`).join('')}</tbody></table>` : '<div class="empty">No coupons yet</div>'}</div>`;
+  $('#addK').onclick = () => couponModal();
+  $$('tr[data-code]').forEach((tr) => {
+    const c = coupons.find((x) => x.code === tr.dataset.code);
+    $('[data-kedit]', tr).onclick = () => couponModal(c);
+    $('[data-kdel]', tr).onclick = (ev) => confirm(`Delete coupon ${c.code}?`) && act(ev.target, async () => { await api('DELETE', '/admin/coupons/' + c.code); VIEWS.coupons(); }, 'Deleted');
+    $('[data-kactive]', tr).onchange = (ev) => act(null, () => api('PUT', '/admin/coupons/' + c.code, { active: ev.target.checked }), 'Saved');
+  });
+};
+function couponModal(c) {
+  const e = !!c; c = c || { code: '', type: 'percent', value: '', minOrder: '', maxDiscount: '', usageLimit: '', active: true, description: '', expiresAt: null };
+  const exp = c.expiresAt ? new Date(c.expiresAt - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : '';
+  const m = openModal(e ? 'Edit coupon' : 'New coupon', `<form id="kf">
+    <div class="row"><div><label class="f">Code *</label><input class="f-in" name="code" value="${esc(c.code)}" ${e ? 'readonly' : ''} required maxlength="24" style="text-transform:uppercase"></div>
+    <div><label class="f">Type</label><select class="f-sel" name="type"><option value="percent" ${c.type === 'percent' ? 'selected' : ''}>Percent off</option><option value="flat" ${c.type === 'flat' ? 'selected' : ''}>Flat ₹ off</option></select></div>
+    <div><label class="f">Value *</label><input class="f-in" name="value" type="number" min="1" step="0.01" value="${esc(c.value)}" required></div></div>
+    <div class="row"><div><label class="f">Minimum order (₹)</label><input class="f-in" name="minOrder" type="number" min="0" value="${esc(c.minOrder || '')}"></div>
+    <div><label class="f">Max discount (₹, for %)</label><input class="f-in" name="maxDiscount" type="number" min="0" value="${esc(c.maxDiscount || '')}"></div>
+    <div><label class="f">Usage limit</label><input class="f-in" name="usageLimit" type="number" min="0" value="${esc(c.usageLimit || '')}" placeholder="0 = unlimited"></div></div>
+    <div class="row"><div><label class="f">Expires</label><input class="f-in" name="expiresAt" type="datetime-local" value="${exp}"></div><div><label class="f">Description</label><input class="f-in" name="description" value="${esc(c.description)}" maxlength="120"></div></div>
+    <label class="chk">${sw(c.active, 'name="active"')} Active</label></form>`,
+    `<button class="btn ghost" data-close>Cancel</button><button class="btn" id="saveK">${e ? 'Save' : 'Create coupon'}</button>`);
+  $('#saveK', m).onclick = (ev) => {
+    const f = $('#kf', m); if (!f.reportValidity()) return; const d = Object.fromEntries(new FormData(f)); d.active = f.elements.active.checked; d.expiresAt = d.expiresAt ? new Date(d.expiresAt).toISOString() : null;
+    act(ev.target, async () => { await (e ? api('PUT', '/admin/coupons/' + c.code, d) : api('POST', '/admin/coupons', d)); closeModal(); VIEWS.coupons(); }, 'Saved');
+  };
+}
+
+/* =============================== SETTINGS =============================== */
+VIEWS.settings = async () => {
+  const { settings: s, storage } = await api('GET', '/admin/settings');
+  $('#view').innerHTML = `
+  <div class="card sect"><h3>🏪 Shop</h3><p>These appear on your website immediately.</p>
+    <form id="sf"><div class="row"><div><label class="f">Shop name</label><input class="f-in" name="shopName" value="${esc(s.shopName)}"></div><div><label class="f">Contact phone</label><input class="f-in" name="contactPhone" value="${esc(s.contactPhone)}"></div></div>
+    <div style="margin-bottom:14px"><label class="f">📣 Announcement bar (top of website)</label><input class="f-in" name="announcement" value="${esc(s.announcement)}" maxlength="200" placeholder="e.g. Diwali special — flat 15% off with code DIWALI15"><div class="hint">Leave empty to hide the bar.</div></div>
+    <div class="row"><div><label class="f">Delivery fee (₹)</label><input class="f-in" name="deliveryFee" type="number" min="0" value="${esc(s.deliveryFee)}"></div><div><label class="f">Free delivery above (₹)</label><input class="f-in" name="freeDeliveryAbove" type="number" min="0" value="${esc(s.freeDeliveryAbove)}"><div class="hint">0 = never free</div></div><div><label class="f">Minimum order (₹)</label><input class="f-in" name="minOrder" type="number" min="0" value="${esc(s.minOrder)}"></div></div>
+    <label class="chk" style="margin-bottom:16px">${sw(s.acceptingOrders !== false, 'name="acceptingOrders"')} Accepting orders <span class="hint" style="margin:0">(turn off when you are closed)</span></label>
+    <button class="btn" id="saveS">Save settings</button></form></div>
+  <div class="card sect"><h3>🔐 Change password</h3><p>Minimum 8 characters. You will stay signed in on this device.</p>
+    <form id="pwf" class="row" style="align-items:end"><div><label class="f">Current password</label><input class="f-in" type="password" name="current" required autocomplete="current-password"></div><div><label class="f">New password</label><input class="f-in" type="password" name="next" required minlength="8" autocomplete="new-password"></div><div><button class="btn">Update password</button></div></form></div>
+  <div class="card sect"><h3>💾 Backup &amp; restore</h3><p>Download everything (products, categories, orders, coupons, uploaded images) as one file.</p>
+    <div class="tools"><a class="btn ghost" href="/api/admin/export" download>⬇ Download backup</a><label class="btn ghost" style="cursor:pointer">⬆ Restore from file<input type="file" id="imp" accept="application/json" hidden></label><button class="btn danger" id="reset">Restore sample data</button></div></div>
+  <div class="card sect"><h3>ℹ️ System</h3><p style="margin:0">Database: <b>${storage.mode === 'redis' ? 'Upstash Redis ✅' : storage.mode === 'file' ? 'Local file (development)' : 'Memory only ⚠️ (not saved)'}</b></p></div>`;
+  $('#sf').onsubmit = (e) => { e.preventDefault(); const f = e.target; const d = Object.fromEntries(new FormData(f)); d.acceptingOrders = f.elements.acceptingOrders.checked; act($('#saveS'), () => api('PUT', '/admin/settings', d), 'Settings saved — live on website'); };
+  $('#pwf').onsubmit = (e) => { e.preventDefault(); const d = Object.fromEntries(new FormData(e.target)); act($('button', e.target), async () => { await api('POST', '/admin/password', d); e.target.reset(); }, 'Password changed'); };
+  $('#imp').onchange = async (e) => { const f = e.target.files[0]; if (!f) return; if (!confirm('This REPLACES all current data with the backup. Continue?')) return; try { const data = JSON.parse(await f.text()); await api('POST', '/admin/import', data); toast('Backup restored', 'ok'); } catch (err) { toast(err.message, 'err'); } e.target.value = ''; };
+  $('#reset').onclick = (e) => { const t = prompt('This deletes ALL data (including orders) and restores the sample ice creams.\nType RESET to confirm:'); if (t === 'RESET') act(e.target, () => api('POST', '/admin/reset', { confirm: 'RESET' }), 'Sample data restored'); };
+};
+
+boot();
+</script>
+</body>
+</html>

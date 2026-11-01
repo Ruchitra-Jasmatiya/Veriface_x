@@ -1,0 +1,128 @@
+/* Admin page only. Everything is scoped under .adm so the shop design is untouched. */
+.adm {
+  --a-bg: #faf7f2;
+  --a-card: #fff;
+  --a-ink: #2b0404;
+  --a-muted: #7a6a62;
+  --a-line: #eadfd3;
+  --a-maroon: #800000;
+  --a-gold: #d4af37;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow-y: auto;
+  background: var(--a-bg);
+  color: var(--a-ink);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  padding: 0 16px 110px;
+  -webkit-text-size-adjust: 100%;
+}
+.adm * { box-sizing: border-box; }
+.adm h1, .adm h2 { font-family: inherit; line-height: 1.2; margin: 0; text-align: left; letter-spacing: 0; }
+.adm > *:not(.adm-savebar):not(.adm-toast) { max-width: 760px; margin-left: auto; margin-right: auto; }
+
+.adm button, .adm input, .adm select { font-family: inherit; font-size: 16px; }
+.adm-loading { padding-top: 40vh; text-align: center; color: var(--a-muted); }
+
+/* login */
+.adm-login { display: flex; align-items: center; justify-content: center; padding: 16px; }
+.adm-login-card {
+  width: 100%; max-width: 340px; background: var(--a-card); border: 1px solid var(--a-line);
+  border-radius: 16px; padding: 28px 22px; text-align: center; display: flex; flex-direction: column; gap: 12px;
+}
+.adm .adm-login-card h1 { font-size: 1.6rem; letter-spacing: 4px; color: var(--a-maroon); text-align: center; }
+.adm-login-card p { margin: 0 0 6px; color: var(--a-muted); }
+.adm-login-card input { text-align: center; }
+
+/* header */
+.adm-top { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 10px; }
+.adm .adm-top h1 { font-size: 1.25rem; color: var(--a-maroon); }
+.adm-top a, .adm-link { color: var(--a-maroon); font-size: 14px; text-decoration: none; margin-left: 14px; }
+
+.adm-link { background: none; border: 0; padding: 8px 4px; cursor: pointer; border-radius: 0; font-size: 14px; }
+.adm-link.danger { color: #b3261e; }
+
+/* category chips */
+.adm-chips { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; }
+.adm-chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; background: var(--a-card); color: var(--a-ink); border: 1px solid var(--a-line);
+  border-radius: 999px; padding: 9px 14px; font-size: 14px; cursor: pointer; white-space: nowrap;
+}
+.chip span { color: var(--a-muted); margin-left: 4px; font-size: 12px; }
+.chip.on { background: var(--a-maroon); color: #fff; border-color: var(--a-maroon); }
+.chip.on span { color: #f3e5ab; }
+.chip.add { border-style: dashed; color: var(--a-maroon); }
+
+.adm-addcat { display: flex; gap: 8px; margin-bottom: 12px; }
+.adm-addcat input { flex: 1; min-width: 0; }
+
+.adm-cathead { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 8px; }
+.adm .adm-cathead h2 { font-size: 1.1rem; }
+
+.adm-actions { display: flex; align-items: center; gap: 12px; margin: 4px 0 14px; flex-wrap: wrap; }
+.adm-hint { color: var(--a-muted); font-size: 13px; }
+.adm-empty { text-align: center; color: var(--a-muted); padding: 40px 0; }
+
+/* inputs + buttons */
+.adm input[type='text'], .adm input[type='password'], .adm input[type='number'], .adm input:not([type]), .adm select {
+  width: 100%; background: #fff; color: var(--a-ink); border: 1px solid var(--a-line);
+  border-radius: 10px; padding: 11px 12px; outline: none; min-height: 44px;
+}
+.adm input:focus, .adm select:focus { border-color: var(--a-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, .2); }
+
+.adm-btn {
+  border: 0; border-radius: 10px; padding: 12px 18px; min-height: 44px; font-weight: 600; cursor: pointer;
+  background: var(--a-card); color: var(--a-ink);
+}
+.adm-btn.primary { background: var(--a-maroon); color: #fff; }
+.adm-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.adm-err { color: #b3261e; font-size: 14px; }
+
+/* product list */
+.adm-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.adm-item {
+  display: flex; gap: 12px; background: var(--a-card); border: 1px solid var(--a-line);
+  border-radius: 14px; padding: 10px;
+}
+.adm-thumb {
+  position: relative; flex: none; width: 92px; height: 120px; padding: 0; border: 0; border-radius: 10px;
+  overflow: hidden; cursor: pointer; background: #eee;
+}
+.adm-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.adm-thumb span {
+  position: absolute; left: 0; right: 0; bottom: 0; background: rgba(43, 4, 4, .7); color: #fff;
+  font-size: 12px; padding: 4px 0;
+}
+.adm-thumb em {
+  position: absolute; top: 6px; left: 6px; background: var(--a-gold); color: #2b0404; font-style: normal;
+  font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 6px;
+}
+.adm-fields { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.adm-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.adm-price { display: flex; align-items: center; gap: 4px; width: 120px; font-weight: 600; }
+.adm-check { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.adm-check input { width: 20px; height: 20px; min-height: 0; accent-color: var(--a-maroon); }
+.adm-row select { width: auto; max-width: 100%; }
+
+/* save bar + toast */
+.adm-savebar {
+  position: fixed; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: #fff;
+  border-top: 1px solid var(--a-line); font-size: 14px; color: var(--a-muted);
+}
+.adm-toast {
+  position: fixed; left: 16px; right: 16px; bottom: 84px; margin: 0 auto; max-width: 420px; text-align: center;
+  padding: 12px 16px; border-radius: 12px; color: #fff; font-size: 15px; box-shadow: 0 6px 24px rgba(0, 0, 0, .2);
+}
+.adm-toast.ok { background: #1f7a3d; }
+.adm-toast.err { background: #b3261e; }
+
+@media (min-width: 700px) {
+  .adm-thumb { width: 110px; height: 140px; }
+}
+
+.adm .chip:hover { border-color: var(--a-gold); }
+.adm .chip.on:hover { border-color: var(--a-maroon); }
+.adm button:focus-visible { outline: 2px solid var(--a-gold); outline-offset: 2px; }
