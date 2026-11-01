@@ -1,0 +1,10 @@
+api/*.py
+api/migrations/
+api/templates/
+api/tests.py
+db.sqlite3
+media/
+tests/
+scripts/
+calibration/
+.venv/
